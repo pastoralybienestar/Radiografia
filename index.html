@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taller Experiencial 5 - Radiografía del Alma</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-light: #ccfbf1; /* teal-50 */
+            --primary-teal: #0f766e; /* teal-700 */
+            --primary-dark: #134e4a; /* teal-900 */
+            --accent-emerald: #10b981; /* emerald-500 */
+            --accent-rose: #f43f5e; /* rose-500 */
+            --text-dark: #334155; /* slate-700 */
+            --text-muted: #64748b; /* slate-500 */
+            --bg-page: #f8fafc; /* slate-50 */
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            /* New subtle, deeper gradient background */
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(167, 80%, 96%, 1) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(210, 40%, 96%, 1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, hsla(167, 80%, 96%, 1) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, hsla(210, 40%, 96%, 1) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        h1, h2, h3, .title-font {
+            font-family: 'Cinzel', serif;
+        }
+        
+        .prayer-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Smooth Transitions */
+        .fade-enter-active { opacity: 1; transform: translateY(0); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+
+        /* Input Styling - Updated for new theme */
+        .ethereal-input {
+            border: none;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.4);
+            background: rgba(255, 255, 255, 0.6);
+            width: 100%;
+            padding: 0.5rem 0.5rem;
+            outline: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            border-radius: 4px 4px 0 0;
+        }
+        .ethereal-input:focus {
+            border-bottom: 2px solid var(--primary-teal);
+            background: rgba(255, 255, 255, 1);
+        }
+        
+        .ethereal-textarea {
+            width: 100%;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 0.75rem;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 1rem;
+            resize: vertical;
+            outline: none;
+            transition: all 0.3s ease;
+            min-height: 100px;
+        }
+        .ethereal-textarea:focus {
+            border-color: var(--primary-teal);
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.1);
+        }
+
+        /* Modern Cards */
+        .modern-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 1);
+            box-shadow: 0 10px 40px -10px rgba(15, 118, 110, 0.08);
+            border-radius: 1.5rem;
+        }
+
+        /* Skeleton Interactive Styling - Updated for Teal Theme */
+        .skeleton-svg {
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.15));
+            max-height: 70vh;
+        }
+        .bone-group {
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center;
+        }
+        .bone-path {
+            fill: #f1f5f9;
+            stroke: #cbd5e1;
+            stroke-width: 1.5;
+            transition: all 0.4s ease;
+        }
+        .bone-group:hover .bone-path {
+            fill: #e0f2fe; /* Light blue/teal tint */
+            stroke: var(--primary-teal);
+            filter: drop-shadow(0 0 10px rgba(15, 118, 110, 0.3));
+        }
+        .bone-group.active-bone .bone-path {
+            fill: #ccfbf1;
+            stroke: var(--primary-dark);
+            stroke-width: 2.5;
+            filter: drop-shadow(0 0 15px rgba(15, 118, 110, 0.5));
+        }
+
+        /* Timeline Styling */
+        .timeline-container { position: relative; padding: 2rem 0; }
+        .timeline-track {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--text-muted), transparent);
+            transform: translateY(-50%);
+            opacity: 0.3;
+        }
+        
+        /* Prayer Input */
+        .prayer-textarea {
+            background: transparent;
+            border: none;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.4);
+            color: white;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            line-height: 1.8;
+            outline: none;
+            resize: none;
+            width: 100%;
+            transition: border-color 0.3s ease;
+        }
+        .prayer-textarea:focus { border-bottom-color: rgba(255, 255, 255, 0.9); }
+        .prayer-textarea::placeholder { color: rgba(255, 255, 255, 0.3); }
+
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-teal-700 flex items-center justify-center text-white shadow-lg">
+                        <i class="fa-solid fa-x-ray text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold title-font text-slate-800 tracking-wide leading-tight">CRISTOSCOPIA</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="h-[2px] w-full bg-slate-100">
+            <div id="progress-bar" class="h-full bg-gradient-to-r from-teal-400 to-teal-600 transition-all duration-300 ease-out w-0"></div>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-10 max-w-6xl relative space-y-16">
+
+        <div class="modern-card p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative overflow-hidden">
+            <div class="absolute -right-10 -top-10 text-teal-50 opacity-50 transform rotate-12 pointer-events-none">
+                <i class="fa-solid fa-notes-medical text-9xl"></i>
+            </div>
+            
+            <div class="relative z-10">
+                <span class="inline-block py-1 px-3 rounded-full bg-teal-50 text-teal-700 text-xs font-bold tracking-wider mb-2 border border-teal-100">TALLER EXPERIENCIAL 5</span>
+                <h2 class="text-3xl md:text-4xl font-bold title-font text-slate-800 mb-1">Radiografía del Alma</h2>
+                <p class="text-slate-500 text-sm italic">Explorando las fracturas y fortalezas del ser.</p>
+            </div>
+            
+            <div class="relative z-10 bg-white/60 p-5 rounded-2xl border border-white shadow-sm w-full md:w-auto min-w-[300px]">
+                <div class="space-y-4">
+                    <div class="flex items-end gap-3">
+                        <i class="fa-regular fa-calendar text-teal-600 mb-2"></i>
+                        <div class="flex-grow">
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Fecha</label>
+                            <input type="date" id="patient-date" class="ethereal-input text-sm bg-transparent">
+                        </div>
+                    </div>
+                    <div class="flex items-end gap-3">
+                        <i class="fa-regular fa-user text-teal-600 mb-2"></i>
+                        <div class="flex-grow">
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Paciente / Maestro</label>
+                            <input type="text" id="patient-name" placeholder="Tu nombre..." class="ethereal-input text-sm font-medium bg-transparent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="section-content fade-enter-active">
+            <div class="modern-card p-6 md:p-10">
+                <div class="text-center mb-10">
+                    <h3 class="text-3xl font-bold title-font text-slate-800 mb-3">Las fracturas y las fortalezas</h3>
+                    <p class="text-slate-600 max-w-2xl mx-auto">Explora la anatomía de tu alma. Haz clic en las diferentes partes del cuerpo para meditar sobre tus áreas de sanación (fracturas) y gracia (fortalezas).</p>
+                </div>
+
+                <div class="flex flex-col lg:flex-row gap-10 items-center justify-center">
+                    
+                    <!-- Interactive SVG Skeleton -->
+                    <div class="w-full lg:w-1/2 flex justify-center relative min-h-[500px]">
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-full bg-teal-100/50 blur-[80px] rounded-full pointer-events-none"></div>
+                        
+                        <svg viewBox="0 0 400 800" class="skeleton-svg w-full max-w-[300px] h-auto z-10">
+                            <!-- Skull (Mente) -->
+                            <g class="bone-group" onclick="selectBone(this, 'mente')" data-name="La Mente" data-desc="Pensamientos, creencias, la forma en que ves a Dios y a ti mismo.">
+                                <path class="bone-path" d="M200,40 C140,40 140,110 150,140 C155,160 170,180 200,180 C230,180 245,160 250,140 C260,110 260,40 200,40 Z"/>
+                                <circle cx="175" cy="110" r="18" fill="#cbd5e1" opacity="0.6"/>
+                                <circle cx="225" cy="110" r="18" fill="#cbd5e1" opacity="0.6"/>
+                                <path d="M195,145 L205,145 L200,160 Z" fill="#cbd5e1" opacity="0.6"/>
+                                <path d="M175,170 Q200,185 225,170" fill="none" stroke="#cbd5e1" stroke-width="3" opacity="0.6"/>
+                            </g>
+
+                            <!-- Torso (Corazón/Voluntad) -->
+                            <g class="bone-group" onclick="selectBone(this, 'corazon')" data-name="El Corazón y Voluntad" data-desc="Emociones profundas, deseos, dolores afectivos, donde reside el amor.">
+                                <path class="bone-path" d="M195,185 L205,185 L205,420 L195,420 Z"/>
+                                <path class="bone-path" d="M195,220 C130,220 120,300 130,340 C140,380 180,360 195,340 Z"/>
+                                <path class="bone-path" d="M205,220 C270,220 280,300 270,340 C260,380 220,360 205,340 Z"/>
+                                <path d="M195,240 Q140,250 145,290 M205,240 Q260,250 255,290" fill="none" stroke="#cbd5e1" stroke-width="4"/>
+                                <path d="M195,270 Q130,280 135,320 M205,270 Q270,280 265,320" fill="none" stroke="#cbd5e1" stroke-width="4"/>
+                                <path d="M195,300 Q150,310 155,340 M205,300 Q250,310 245,340" fill="none" stroke="#cbd5e1" stroke-width="4"/>
+                            </g>
+
+                            <!-- Pelvis (Raíces/Identidad) -->
+                            <g class="bone-group" onclick="selectBone(this, 'raices')" data-name="La Base y Raíces" data-desc="Sentido de pertenencia, seguridad, identidad básica y traumas fundacionales.">
+                                <path class="bone-path" d="M160,400 C120,390 120,450 150,470 L200,490 L250,470 C280,450 280,390 240,400 C220,405 210,430 200,430 C190,430 180,405 160,400 Z"/>
+                            </g>
+
+                            <!-- Arms (Acción/Servicio) -->
+                            <g class="bone-group" onclick="selectBone(this, 'manos')" data-name="Las Manos y Acción" data-desc="Capacidad de servir, dar, trabajar, y cómo interactúas con el mundo exterior.">
+                                <path class="bone-path" d="M150,210 L90,340 L80,340 L140,210 Z"/>
+                                <circle class="bone-path" cx="145" cy="210" r="12"/>
+                                <circle class="bone-path" cx="85" cy="340" r="10"/>
+                                <path class="bone-path" d="M80,340 L70,470 L60,470 L70,340 Z"/>
+                                <path class="bone-path" d="M60,470 C40,480 40,510 60,530 C70,540 85,530 80,510 L70,470 Z"/>
+                                
+                                <path class="bone-path" d="M250,210 L310,340 L320,340 L260,210 Z"/>
+                                <circle class="bone-path" cx="255" cy="210" r="12"/>
+                                <circle class="bone-path" cx="315" cy="340" r="10"/>
+                                <path class="bone-path" d="M320,340 L330,470 L340,470 L330,340 Z"/>
+                                <path class="bone-path" d="M340,470 C360,480 360,510 340,530 C330,540 315,530 320,510 L330,470 Z"/>
+                            </g>
+
+                            <!-- Legs (Caminar/Dirección) -->
+                            <g class="bone-group" onclick="selectBone(this, 'pies')" data-name="Los Pies y el Caminar" data-desc="Dirección de tu vida, soporte, vocación y capacidad de avanzar hacia Dios.">
+                                <path class="bone-path" d="M165,470 L145,630 L130,630 L150,470 Z"/>
+                                <circle class="bone-path" cx="158" cy="465" r="15"/>
+                                <circle class="bone-path" cx="138" cy="630" r="12"/>
+                                <path class="bone-path" d="M130,630 L120,770 L105,770 L115,630 Z"/>
+                                <path class="bone-path" d="M105,770 C90,780 90,810 120,800 L135,780 L120,770 Z"/>
+
+                                <path class="bone-path" d="M235,470 L255,630 L270,630 L250,470 Z"/>
+                                <circle class="bone-path" cx="242" cy="465" r="15"/>
+                                <circle class="bone-path" cx="262" cy="630" r="12"/>
+                                <path class="bone-path" d="M270,630 L280,770 L295,770 L285,630 Z"/>
+                                <path class="bone-path" d="M295,770 C310,780 310,810 280,800 L265,780 L280,770 Z"/>
+                            </g>
+                        </svg>
+                        
+                        <!-- Tooltip -->
+                        <div id="bone-tooltip" class="absolute hidden bg-slate-800 text-white text-xs px-3 py-2 rounded-xl pointer-events-none shadow-xl z-20 max-w-[200px] text-center transform -translate-x-1/2 -translate-y-full transition-opacity duration-200 opacity-0 border border-slate-600">
+                            <strong id="bone-name" class="block text-teal-300 mb-1 text-sm font-semibold"></strong>
+                            <span id="bone-desc" class="text-slate-300"></span>
+                            <div class="absolute bottom-[-6px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-slate-800"></div>
+                        </div>
+                    </div>
+
+                    <!-- Inputs Area for Bones -->
+                    <div class="w-full lg:w-1/2 flex flex-col gap-6">
+                        <div id="selection-prompt" class="bg-teal-50/80 backdrop-blur border border-teal-100 rounded-2xl p-5 text-center text-teal-800 font-medium animate-pulse shadow-sm">
+                            <i class="fa-solid fa-hand-pointer mr-2 text-teal-600"></i> Selecciona una parte del cuerpo en la radiografía para comenzar tu análisis.
+                        </div>
+                        
+                        <div class="bg-white/90 backdrop-blur rounded-3xl shadow-sm border border-slate-100 p-6 relative overflow-hidden group hover:shadow-md transition-shadow">
+                            <div class="absolute -right-4 -top-4 w-20 h-20 bg-rose-50 rounded-full -z-0 opacity-50"></div>
+                            <h4 class="font-bold text-rose-600 mb-2 text-lg flex items-center relative z-10">
+                                <i class="fa-solid fa-heart-crack mr-3 text-rose-400"></i> Mis Fracturas
+                            </h4>
+                            <p class="text-xs text-slate-500 mb-4 relative z-10 leading-relaxed">Dolores, heridas, pecados, áreas que necesitan profunda sanación y misericordia en esta zona de tu vida.</p>
+                            <textarea id="fracturas-text" class="ethereal-textarea focus:border-rose-400 focus:ring-rose-100 relative z-10 bg-slate-50/50" placeholder="Describe aquí las áreas que necesitan sanación..." data-save="t5-fracturas"></textarea>
+                        </div>
+                        
+                        <div class="bg-white/90 backdrop-blur rounded-3xl shadow-sm border border-slate-100 p-6 relative overflow-hidden group hover:shadow-md transition-shadow">
+                            <div class="absolute -right-4 -top-4 w-20 h-20 bg-emerald-50 rounded-full -z-0 opacity-50"></div>
+                            <h4 class="font-bold text-emerald-600 mb-2 text-lg flex items-center relative z-10">
+                                <i class="fa-solid fa-seedling mr-3 text-emerald-400"></i> Mis Fortalezas
+                            </h4>
+                            <p class="text-xs text-slate-500 mb-4 relative z-10 leading-relaxed">Gracias, virtudes, dones que te sostienen, lugares donde Dios ha obrado en esta zona de tu vida.</p>
+                            <textarea id="fortalezas-text" class="ethereal-textarea focus:border-emerald-400 focus:ring-emerald-100 relative z-10 bg-slate-50/50" placeholder="Describe aquí los dones y gracias que te sostienen..." data-save="t5-fortalezas"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="section-content">
+            <div class="modern-card p-6 md:p-10">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold title-font text-slate-800 mb-3">Contemplar la propia historia</h3>
+                    <p class="text-slate-600">Mira hacia atrás con los ojos de Dios. Elabora la síntesis de tu camino interior.</p>
+                </div>
+                
+                <div>
+                    <h4 class="text-xl font-bold text-teal-700 mb-8 text-center uppercase tracking-widest text-sm">Síntesis del Camino</h4>
+                    <div class="timeline-container overflow-x-auto pb-8 hide-scrollbar">
+                        <div class="timeline-track"></div>
+                        
+                        <div class="flex justify-between items-stretch min-w-[900px] px-8 gap-8 relative z-10 pt-16 pb-16">
+                            
+                            <!-- Generador de Nodos de Síntesis -->
+                            <script>
+                                function generateContemplationNode(id, position) {
+                                    const mtClass = position === 'top' ? '-mt-28' : 'mt-28';
+                                    const connectorClass = position === 'top' ? 'bottom-[-24px]' : 'top-[-24px]';
+                                    
+                                    return `
+                                    <div class="w-64 flex flex-col items-center ${mtClass} group relative">
+                                        ${position === 'bottom' ? `<div class="w-4 h-4 rounded-full bg-slate-300 border-2 border-white shadow-sm z-20 mb-4 group-hover:scale-125 group-hover:bg-teal-500 transition-all duration-300"></div>` : ''}
+                                        
+                                        <div class="w-full bg-white p-5 rounded-2xl shadow-sm border border-slate-100 z-10 group-hover:shadow-lg group-hover:border-teal-100 transition-all relative">
+                                            <div class="absolute ${connectorClass} left-1/2 w-[2px] h-6 bg-slate-200 -translate-x-1/2 z-0 group-hover:bg-teal-200 transition-colors"></div>
+                                            <div class="space-y-3">
+                                                <input type="text" placeholder="¿Qué aprendí?" class="ethereal-input text-xs font-medium text-slate-600" data-save="t5-sintesis-ap${id}">
+                                                <input type="text" placeholder="¿Qué perdí?" class="ethereal-input text-xs font-medium text-slate-600" data-save="t5-sintesis-pe${id}">
+                                                <input type="text" placeholder="¿Qué ganó mi corazón?" class="ethereal-input text-xs font-medium text-slate-600" data-save="t5-sintesis-ga${id}">
+                                                <input type="text" placeholder="¿Dónde descubro a Dios?" class="ethereal-input text-xs font-bold text-teal-700" data-save="t5-sintesis-di${id}">
+                                            </div>
+                                        </div>
+
+                                        ${position === 'top' ? `<div class="w-4 h-4 rounded-full bg-slate-300 border-2 border-white shadow-sm z-20 mt-4 group-hover:scale-125 group-hover:bg-teal-500 transition-all duration-300"></div>` : ''}
+                                    </div>
+                                    `;
+                                }
+                                
+                                document.write(generateContemplationNode(1, 'bottom'));
+                                document.write(generateContemplationNode(2, 'top'));
+                                document.write(generateContemplationNode(3, 'bottom'));
+                                document.write(generateContemplationNode(4, 'top'));
+                            </script>
+                            
+                            <div class="flex items-center w-10">
+                                <i class="fa-solid fa-arrow-right text-2xl text-slate-300 group-hover:text-teal-400 transition-colors"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-content">
+            <div class="bg-gradient-to-br from-slate-800 to-teal-950 p-8 md:p-12 rounded-3xl shadow-2xl relative overflow-hidden border border-teal-900/50 text-center md:text-left flex flex-col md:flex-row items-center gap-10">
+                
+                <!-- Background decoration -->
+                <i class="fa-solid fa-hands-praying absolute -bottom-10 -right-10 text-9xl text-teal-800/30 transform -rotate-12 pointer-events-none"></i>
+                
+                <div class="w-full md:w-1/3 flex flex-col items-center md:items-start relative z-10">
+                    <span class="inline-block py-1 px-3 rounded-full bg-teal-900/50 text-teal-300 text-[10px] font-bold tracking-widest uppercase mb-4 border border-teal-700/50">Cierre del Taller</span>
+                    <h3 class="text-3xl font-bold title-font text-white mb-4">Oración</h3>
+                    <p class="text-teal-200/80 text-sm leading-relaxed mb-6 font-light">
+                        Cada maestro escribe una oración breve para concluir esta experiencia, recogiendo los frutos de la radiografía de su alma.
+                    </p>
+                </div>
+
+                <div class="w-full md:w-2/3 relative z-10 bg-white/5 backdrop-blur-md p-6 md:p-8 rounded-2xl border border-white/10 shadow-inner">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xl prayer-font text-teal-100 italic">"Señor, hoy descubro que en lo más profundo de mi vida...</label>
+                        <textarea class="prayer-textarea min-h-[150px] mt-2" placeholder="continúa tu oración aquí..." data-save="t5-oracion"></textarea>
+                        <span class="text-xl prayer-font text-teal-100 italic self-end mt-2">Amén."</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="mt-16 mb-8 flex justify-center items-center">
+            <button id="btn-finish" class="px-10 py-4 rounded-full bg-slate-800 text-white font-bold shadow-lg hover:shadow-xl hover:bg-teal-700 transition-all hover:-translate-y-1 text-lg flex items-center gap-3 border border-slate-700 hover:border-teal-500 group">
+                <i class="fa-solid fa-floppy-disk group-hover:scale-110 transition-transform"></i> 
+                <span>Guardar Taller</span>
+            </button>
+        </div>
+
+    </main>
+
+    <div id="success-modal" class="fixed inset-0 z-[100] hidden items-center justify-center">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" id="modal-backdrop"></div>
+        
+        <div class="relative bg-white rounded-3xl shadow-2xl p-8 max-w-sm w-full mx-4 transform transition-all scale-95 opacity-0 duration-300 border border-slate-100" id="modal-content">
+            <div class="absolute -top-8 left-1/2 -translate-x-1/2 w-16 h-16 bg-teal-600 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
+                <i class="fa-solid fa-check text-3xl text-white"></i>
+            </div>
+            
+            <div class="text-center mt-8">
+                <h3 class="text-2xl font-bold text-slate-800 title-font mb-2">¡Taller Guardado!</h3>
+                <p class="text-sm text-slate-500 mb-6 leading-relaxed">Tu radiografía del alma y oración final han sido guardadas exitosamente en tu sesión.</p>
+                
+                <button id="btn-close-modal" class="w-full py-3 px-4 bg-slate-50 text-teal-700 font-bold rounded-xl border border-slate-200 hover:bg-teal-50 hover:border-teal-200 transition-all focus:outline-none">
+                    Continuar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Persistence (Session Storage)
+        function loadSavedData() {
+            const inputs = document.querySelectorAll('[data-save]');
+            inputs.forEach(input => {
+                const savedValue = sessionStorage.getItem(input.dataset.save);
+                if (savedValue) input.value = savedValue;
+                
+                input.addEventListener('input', (e) => {
+                    sessionStorage.setItem(e.target.dataset.save, e.target.value);
+                });
+            });
+
+            ['patient-date', 'patient-name'].forEach(id => {
+                const el = document.getElementById(id);
+                if(sessionStorage.getItem(id)) el.value = sessionStorage.getItem(id);
+                el.addEventListener('input', (e) => sessionStorage.setItem(id, e.target.value));
+            });
+        }
+
+        // Scroll Progress Bar Logic
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progress-bar').style.width = scrolled + "%";
+        });
+
+        // Modal Logic
+        const modal = document.getElementById('success-modal');
+        const modalContent = document.getElementById('modal-content');
+        
+        function openModal() {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            void modal.offsetWidth; // force reflow
+            modalContent.classList.remove('scale-95', 'opacity-0');
+            modalContent.classList.add('scale-100', 'opacity-100');
+        }
+
+        function closeModal() {
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        document.getElementById('btn-finish').addEventListener('click', openModal);
+        document.getElementById('btn-close-modal').addEventListener('click', closeModal);
+        document.getElementById('modal-backdrop').addEventListener('click', closeModal);
+
+        // Skeleton SVG Interactivity
+        const tooltip = document.getElementById('bone-tooltip');
+        const boneNameEl = document.getElementById('bone-name');
+        const boneDescEl = document.getElementById('bone-desc');
+        const boneGroups = document.querySelectorAll('.bone-group');
+        const selectionPrompt = document.getElementById('selection-prompt');
+
+        boneGroups.forEach(group => {
+            group.addEventListener('mousemove', (e) => {
+                tooltip.style.left = e.clientX + 'px';
+                tooltip.style.top = (e.clientY - 20) + 'px';
+                boneNameEl.textContent = group.getAttribute('data-name');
+                boneDescEl.textContent = group.getAttribute('data-desc');
+                tooltip.classList.remove('hidden', 'opacity-0');
+            });
+
+            group.addEventListener('mouseleave', () => {
+                tooltip.classList.add('opacity-0');
+                setTimeout(() => { if(tooltip.classList.contains('opacity-0')) tooltip.classList.add('hidden'); }, 200);
+            });
+        });
+
+        function selectBone(element, partId) {
+            if(selectionPrompt) selectionPrompt.style.display = 'none';
+            boneGroups.forEach(g => g.classList.remove('active-bone'));
+            element.classList.add('active-bone');
+            
+            // Highlight text areas momentarily
+            const fracturasArea = document.getElementById('fracturas-text');
+            const fortalezasArea = document.getElementById('fortalezas-text');
+            
+            fracturasArea.parentElement.classList.add('scale-[1.02]', 'shadow-md', 'border-rose-200');
+            fortalezasArea.parentElement.classList.add('scale-[1.02]', 'shadow-md', 'border-emerald-200');
+            
+            setTimeout(() => {
+                fracturasArea.parentElement.classList.remove('scale-[1.02]', 'shadow-md', 'border-rose-200');
+                fortalezasArea.parentElement.classList.remove('scale-[1.02]', 'shadow-md', 'border-emerald-200');
+            }, 400);
+        }
+
+        window.addEventListener('DOMContentLoaded', loadSavedData);
+    </script>
+</body>
+</html>
